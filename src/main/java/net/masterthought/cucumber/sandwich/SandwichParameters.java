@@ -21,6 +21,9 @@ public class SandwichParameters {
     
     @Parameter(names = "-i", required = true, description = "Image path")
     private String imagePath;
+    
+    @Parameter(names = "-t", required = true, description = "Test Name")
+    private String testName;
 
     @Parameter(names = "-n", required = false, description = "run once without file change listener")
     private Boolean withoutListener = false;
@@ -51,5 +54,9 @@ public class SandwichParameters {
 
 	public String getImagePath() {
 		return imagePath;
+	}
+
+	public String getTestName() {
+		return testName;
 	}
 }
