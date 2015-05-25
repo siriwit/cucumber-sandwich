@@ -20,7 +20,7 @@ public class CucumberReportMonitor {
 
     public static void main(String[] args) throws Exception {
 
-        SandwichParameters params = new SandwichParameters();
+        final SandwichParameters params = new SandwichParameters();
         JCommander cmd = new JCommander(params);
         final long pollingInterval = 5 * 1000;
 
@@ -34,7 +34,7 @@ public class CucumberReportMonitor {
 
             if (params.getWithoutListener()) {
                 System.out.println("Running once only as -n flag supplied.....");
-                generateReport(reportFolder, outputFolder);
+                generateReport(reportFolder, outputFolder, params);
             } else {
                 System.out.println("Listening for change in folder: " + reportFolder.getAbsoluteFile());
                 FileAlterationObserver observer = new FileAlterationObserver(reportFolder);
@@ -45,7 +45,7 @@ public class CucumberReportMonitor {
                     public void onFileCreate(File file) {
                         try {
                             System.out.println("File created: " + file.getCanonicalPath());
-                            generateReport(reportFolder, outputFolder);
+                            generateReport(reportFolder, outputFolder, params);
                         } catch (Exception e) {
                             e.printStackTrace(System.err);
                         }
@@ -55,7 +55,7 @@ public class CucumberReportMonitor {
                     public void onFileChange(File file) {
                         try {
                             System.out.println("File changed: " + file.getCanonicalPath());
-                            generateReport(reportFolder, outputFolder);
+                            generateReport(reportFolder, outputFolder, params);
                         } catch (IOException e) {
                             e.printStackTrace(System.err);
                         } catch (Exception e) {
@@ -83,12 +83,13 @@ public class CucumberReportMonitor {
         return scanner.getIncludedFiles();
     }
 
-    private static void generateReport(File reportFolder, File outputFolder) throws Exception {
+    private static void generateReport(File reportFolder, File outputFolder, SandwichParameters params) throws Exception {
         File rd = new File(outputFolder + "/cucumber-html-reports");
         List jsonFileList = findJsonReports(reportFolder);
 
         System.out.println("About to generate Cucumber Report into: " + rd.getAbsoluteFile());
-        ReportBuilder reportBuilder = new ReportBuilder(jsonFileList, rd, "", now(), "cucumber-jvm", false, false, false, false, true, false, false, "", false, false);
+        ReportBuilder reportBuilder = new ReportBuilder(jsonFileList, rd, "", now(), "cucumber-jvm", false, false, false, false, true, false, false, "", false, false
+        		, params.getDeviceName(), params.getPlatform(), params.getVersion(), params.getImagePath());
         reportBuilder.generateReports();
         System.out.println("Finished generating Cucumber Report into: " + rd.getAbsoluteFile());
     }
