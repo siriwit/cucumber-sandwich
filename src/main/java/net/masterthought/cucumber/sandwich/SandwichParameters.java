@@ -27,7 +27,13 @@ public class SandwichParameters {
 
     @Parameter(names = "-n", required = false, description = "run once without file change listener")
     private Boolean withoutListener = false;
-
+    
+    @Parameter(names = "-r", required = false, description = "replace rerun result")
+    private Boolean replaceRerunResult = false;
+    
+    @Parameter(names = "-j", required = false, description = "rerun json result")
+    private String rerunJsonResult;
+    
     public String getFolder(){
         return folder;
     }
@@ -58,5 +64,13 @@ public class SandwichParameters {
 
 	public String getTestName() {
 		return testName;
+	}
+
+	public Boolean getReplaceRerunResult() {
+		return replaceRerunResult;
+	}
+
+	public String getRerunJsonResult() {
+		return rerunJsonResult;
 	}
 }

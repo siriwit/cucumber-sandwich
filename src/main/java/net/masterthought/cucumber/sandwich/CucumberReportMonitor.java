@@ -2,7 +2,9 @@ package net.masterthought.cucumber.sandwich;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+
 import net.masterthought.cucumber.ReportBuilder;
+
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
@@ -13,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -88,8 +91,13 @@ public class CucumberReportMonitor {
         List jsonFileList = findJsonReports(reportFolder);
 
         System.out.println("About to generate Cucumber Report into: " + rd.getAbsoluteFile());
+        List<String> rerunJsonFilePath = null;
+        if (params.getReplaceRerunResult()) {
+        	rerunJsonFilePath = Arrays.asList(params.getRerunJsonResult().split("\\s*,\\s*"));
+        }
+        
         ReportBuilder reportBuilder = new ReportBuilder(jsonFileList, rd, "", now(), "cucumber-jvm", false, false, false, false, true, false, false, "", false, false
-        		, params.getDeviceName(), params.getPlatform(), params.getVersion(), params.getImagePath(), params.getTestName());
+        		, params.getDeviceName(), params.getPlatform(), params.getVersion(), params.getImagePath(), params.getTestName(), params.getReplaceRerunResult(), rerunJsonFilePath);
         reportBuilder.generateReports();
         System.out.println("Finished generating Cucumber Report into: " + rd.getAbsoluteFile());
     }
